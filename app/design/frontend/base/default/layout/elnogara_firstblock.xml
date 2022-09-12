@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<layout>
-    <default>
-        <reference name="top.container">
-            <block name="helloworldy" type="elnogara_firstblock/hello" template="firstblock/world.phtml"></block>
-        </reference>
-    </default>
-</layout>
