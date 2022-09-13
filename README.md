@@ -1,84 +1,92 @@
-FALTA FINALIZAR
-
 # Exemplo prático de um Block Magento 1
-Função do repositória será de passar a vocês como é a estrutura básica para um módulo com um bloco com um template funcionar no Magento 1.
+Função do repositório será de passar a vocês como é a estrutura básica para um módulo com um bloco de template funcionar no Magento 1.
 
-<h2>Mas o que é um helper?</h2>
-Como o próprio nome já diz o helper é um ajudante, é aquela classe ou objeto no seu projeto que é para auxiliar as outras funções.
+<h2>Mas o que são os blocks?</h2>
+Tudo no frontend do Magento é exibido atavés de blocos, e neles determinamos as linhas.
 
-<h2>Ondem ficam os helpers?</h2>
-Bem parecido com os controllers eles possuem uma pasta dedicada dentro da raiz do seu módulo, a pasta <strong>Helper</strong> e os arquivos podem ter qualquer nome, mas o nome padrão é <strong>Data.php</strong>
+<h2>Ondem ficam os blocks?</h2>
+Possuem uma pasta dedicada dentro da raiz do seu módulo, a pasta <strong>Block</strong> e os arquivos podem ter qualquer nome.php
 
 ---
-É necessário criar a estrutura básica de um módulo conforme explicado nesse tutorial <a href="https://github.com/ElNogara/Primeiro-Modulo-Magento-1">Primeiro Modulo Magento 1</a>, importante criar o config.xml, e o arquivo de ativação dentro de app/etc/module/NAMESPACE/MODULENAME. Mas uma observação importante é que o MODULENAME deve ser diferente e também se atentar ao apelido dado ao controller, pois ele deve ser único.
+Será necessário apenas alguns arquivos para fazer o bloco funcionar, sendo eles:
 
-O helper deve ser declarado dentro do config.xml: segue abaixo um exemplo:
+<strong>app/code/local/Elnogara/Firstblock/etc/config.xml
+
+app/code/local/Elnogara/Firstblock/Block/Hello.php
+
+app/design/frontend/base/default/layout/elnogara_firstblock.xml
+
+app/design/frontend/base/default/template/firstblock/world.phtml
+
+app/etc/modules/Elnogara_Firstblock.xml</strong>
+
+
+Vamos começar pelo config.xml que é o arquivo responsável por declarar todo o funcionamento do módulo:
 ```
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <config>
     <modules>
-        <Elnogara_FirstHelper>
+        <Elnogara_Firstblock>
             <version>1.0.0</version>
-        </Elnogara_FirstHelper>
+        </Elnogara_Firstblock>
     </modules>
-    <global> <!--Dentro do nó global-->
-        <helpers> <!--Deve ser declarado dentro nó de helpers-->
-            <elnogara_firsthelper> <!--Deve ser passado um apélido para o helper ser reconhecido pelo Magento-->
-                <class>Elnogara_FirstHelper_Helper</class> <!--Deve ser apontado o caminho do helper, o Magento por padrão já busca pelo arquivo Data.php, mas caso o nome do seu Helper seja diferente, então será necessário passar depois de Namespace_Modulename_Helper_<Nome do seu arquivo>.-->
-            </elnogara_firsthelper>
-        </helpers>
-    </global>
-    <frontend>
-        <routers>
-            <nogaraajudante>
-                <use>standard</use>
-                <args>
-                    <module>Elnogara_FirstHelper</module>
-                    <frontName>firsthelper</frontName>
-                </args>
-            </nogaraajudante>
-        </routers>
+	<global>
+		<blocks> <!--Aqui você declara que vai utilizar blocos-->
+      		<elnogara_firstblock> <!--É necessário dar um apelido para a pasta dos seus blocks assim como é feito para os helpers-->
+				<class>Elnogara_Firstblock_Block</class> <!--E então é necessário apontar qual o caminho da sua pasta que contém os blocks-->
+	 		</elnogara_firstblock>
+	    </blocks>
+	</global>
+    <frontend> <!--Dentro da tag frontend pois eles serão utilizados no front da loja-->
+        <layout> <!--Será apontado um arquivo de layout-->
+            <updates>
+                <elnogara_firstblock> <!--Aqui você está declarando um nome para o seu arquivo de layout-->
+                    <file>elnogara_firstblock.xml</file> <!--E nesse nó você está passando qual arquivo de layout está sendo referênciado-->
+                </elnogara_firstblock>
+            </updates>
+        </layout>
     </frontend>
 </config>
 ```
 
-É necessário criar o helper dentro de <strong>Helper/</strong>, e como explicado, segue abaixo exemplo:
+Em sequência do config.xml será chamado o arquivo de layout para avaliar as configurações dentro dele, segue abaixo o código:
+```
+<?xml version="1.0"?>
+<layout> <!--Será uma alteração de layout-->
+    <default> <!--Muito importante entender que são os handles do Magento, e ele filtra em quais páginas o seu layout será executado, com o handle default significa que esse layout vai ser executado em todas as páginas da loja.-->
+        <reference name="top.container">  <!--Também é necessário referênciar um bloco que já existe no Magento, sendo assim o seu vai ser printado apartir desse-->
+            <block name="helloworldy" type="elnogara_firstblock/hello" template="firstblock/world.phtml"></block> <!--Muita atenção nessa parte, esse nó block recebe 3 parâmetros importantes, name=Nome do seu bloco ELE DEVE SER ÚNICO se não não funciona, type=Será sempre passado o bloco que será criado dentro da raiz do módulo na pasta Block, template=É o arquivo de template que vai ser carregado no frontend é nele que fica a parte visível para o usuário-->
+        </reference>
+    </default>
+</layout>
+```
+
+Após isso, bem simples é necessário criar o arquivo de template, segue abaixo o código dele:
+```
+<h1>Hello World! NOGARA</h1> <!--Será apenas para exemplo, mas é aqui onde escolhemos o que será carregado pelo seu bloco no frontend-->
+```
+
+Pra finalizar, criar o arquivo Hello.php que deve existir para que o template sejá printado corretamente na tela, com o código abaixo:
 ```
 <?php
-class Elnogara_FirstHelper_Helper_Data extends Mage_Core_Helper_Abstract <!--Só é necessário passar o nome do helper dentro da classe-->
-{
-    public function gerarLog($texto) <!--Criamos uma função que será chamada futuramente-->
-    {
-        Mage::log($texto, Zend_Log::INFO, 'testeLog.log', true); <!--Função interna do Magento para criar logs-->
-    }
+class Elnogara_Firstblock_Block_Hello extends Mage_Core_Block_Template{
+
 }
 ```
 
-Para chamar o Helper estarei criando um controller com o nome AjudanteController.php, abaixo o código:
+Não se esqueça de criar o arquivo de ativação do módulo dentro de etc/modules:
 ```
-<?php
-
-class Elnogara_FirstHelper_AjudanteController extends Mage_Core_Controller_Front_Action
-{
-    public function logAction()
-    {
-        $helper = Mage::helper('elnogara_firsthelper'); //Para instanciar o helper é necessário chamar a função Mage::helper('') e dentro dela passar o apelido que você deu para o seu helper, assim o Magento vai identificar qual helper da plataforma você está chamando.
-        
-        $helper->gerarLog('Hello World -> Criando seu primeiro helper funcional.'); //Com o helper instânciado eu só preciso chamar qual função dentro dele estarei chamando, nesse caso é a 'gerarLog' e passo como parâmetro o texto que quero que seja gravado no log.
-        echo "Log criado com sucesso.";
-    }
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<modules>
+		<Elnogara_Firstblock>
+			<active>true</active>
+			<codePool>local</codePool>
+		</Elnogara_Firstblock>
+	</modules>
+</config>
 ```
 
-Então seu módulo deve ficar com 3 arquivos criados:
-etc/config.xml
-controllers/AjudanteController.php
-Helper/Data.php
-
-Se estiverem configurados corretamente, basta acessar seu domínio de loja e passar o frontname/controller/action na sua url, no meu caso é:
-'http://localhost/firsthelper/ajudante/log'
-
-Me retorna a mensagem "Log criado com sucesso." que é a mensagem configurada dentro do Helper que está sendo chamado pelo Controller então funcionou tudo como gostariamos.
-Agora nas pastas do Magento, acesse var/log e o arquivo testeLog.log terá sido criado.
+Agora basta acessar a home da sua loja e ver que você printou um bloco no 'top.container', que ficará próximo ao menu de navegação da sua loja.
 
 Qualquer problema estou a disposição para auxiliar vocês.
