@@ -89,4 +89,4 @@ Não se esqueça de criar o arquivo de ativação do módulo dentro de etc/modul
 
 Agora basta acessar a home da sua loja e ver que você printou um bloco no 'top.container', que ficará próximo ao menu de navegação da sua loja.
 
-<strong>Qualquer dúvida estou a disposição - <a href="https://wellingtonnogara.com/" style="color: red;">Wellington Nogara</a>.</strong>
+<strong>Espero muito ter ajudado. Mas qualquer dúvida estou a disposição - <a href="https://wellingtonnogara.com/" style="color: red;">Wellington Nogara</a>.</strong>
