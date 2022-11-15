@@ -1,5 +1,5 @@
 # Exemplo prático de um Block Magento 1
-Função do repositório será de passar a vocês como é a estrutura básica para um módulo com um bloco de template funcionar no Magento 1.
+Como é a estrutura básica para um módulo com um bloco de template funcionar no Magento 1.
 
 <h2>Mas o que são os blocks?</h2>
 Tudo no frontend do Magento é exibido atavés de blocos, e neles determinamos as linhas.
